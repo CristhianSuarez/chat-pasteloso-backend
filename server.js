@@ -11,24 +11,23 @@ const GEMINI_API_KEY = "AQ.Ab8RN6JmIkhFoWKcTwO5h6a-3ZgiXvr0ahqQH_okAlPSXNTM4Q";
 app.post("/chat", async (req, res) => {
     const mensaje = req.body.mensaje;
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-
-    const body = {
-        contents: [
-            {
-                parts: [
-                    { text: `Responde pasteloso, suave y dulce: ${mensaje}` }
-                ]
-            }
-        ]
-    };
-
     try {
-        const respuesta = await fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body)
-        });
+        const respuesta = await fetch(
+            "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${GEMINI_API_KEY}`
+                },
+                body: JSON.stringify({
+                    model: "gemini-2.5-flash",
+                    messages: [
+                        { role: "user", content: `Responde pasteloso, suave y dulce: ${mensaje}` }
+                    ]
+                })
+            }
+        );
 
         const data = await respuesta.json();
         res.json(data);
